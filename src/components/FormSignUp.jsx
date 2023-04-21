@@ -10,18 +10,46 @@ import {
 
 
 function FormSignUp({ handleSubmit }) {
-   
+
     const [name, setName] = useState("")
     const [lastName, setLastName] =
         useState("")
     const [email, setEmail] = useState("")
     const [prom, setProm] = useState(true)
     const [nov, setNov] = useState(false)
+    const [errors, setErrors] = useState({
+        name: {
+            error: false,
+            message:
+                "Deben ser al menos 3 caracteres",
+        },
+    })
+
+    function validarNombre(nombre) {
+        if (nombre.length >= 3) {
+            return {
+                name: {
+                    error: false,
+                    message: "",
+                },
+            }
+        } else {
+            return {
+                name: {
+                    error: true,
+                    message:
+                        "Deben ser al menos 3 caracteres",
+                },
+            }
+        }
+    }
+
+
 
     return (
         <form onSubmit={(e) => {
             e.preventDefault()
-            handleSubmit({name,lastName,email, prom,nov})
+            handleSubmit({ name, lastName, email, prom, nov })
         }}>
 
             <TextField
@@ -34,8 +62,16 @@ function FormSignUp({ handleSubmit }) {
                     setName(e.target.value)
                 }}
                 value={name}
-                error
-                helperText="Deben ser al menos 3 caracteres"
+                error={errors.name.error}
+                helperText={errors.name.error ? errors.name.message : " "}
+                onBlur={(e) => {
+                  
+					setErrors(
+						validarNombre(
+							e.target.value
+						)
+					)
+				}}
             />
 
             <TextField
@@ -45,7 +81,7 @@ function FormSignUp({ handleSubmit }) {
                 fullWidth
                 margin="normal"
                 value={lastName}
-                onChange={(e)=> setLastName(e.target.value)}
+                onChange={(e) => setLastName(e.target.value)}
             />
             <TextField
                 id="email"
@@ -54,13 +90,13 @@ function FormSignUp({ handleSubmit }) {
                 fullWidth
                 margin="normal"
                 value={email}
-                onChange={(e)=> setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
             />
 
             <label>Promociones</label>
             <FormGroup>
                 <FormControlLabel control={
-                    <Switch label="Promociones" checked={prom} onChange={(e)=> setProm(e.target.checked)} />
+                    <Switch label="Promociones" checked={prom} onChange={(e) => setProm(e.target.checked)} />
 
                 } label="Promociones" />
 
@@ -75,9 +111,9 @@ function FormSignUp({ handleSubmit }) {
                 />
             </FormGroup>
             <Button variant="contained"
-            type="submit"
-			>
-            
+                type="submit"
+            >
+
                 Registrarse
             </Button>
         </form>
