@@ -4,18 +4,25 @@ import Switch from "@mui/material/Switch"
 import FormGroup from "@mui/material/FormGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import {
-	useState,
-	useEffect,
+    useState,
+    useEffect,
 } from "react"
 
 
-function FormSignUp() {
+function FormSignUp({ handleSubmit }) {
+   
     const [name, setName] = useState("")
-	useEffect(() => {
-		console.log("Name cambio: ", name)
-	}, [name])
+    const [lastName, setLastName] =
+        useState("")
+    const [email, setEmail] = useState("")
+    const [prom, setProm] = useState(true)
+    const [nov, setNov] = useState(false)
+
     return (
-        <form>
+        <form onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit({name,lastName,email, prom,nov})
+        }}>
 
             <TextField
                 id="name"
@@ -23,10 +30,12 @@ function FormSignUp() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                onChange={(e)=>{
+                onChange={(e) => {
                     setName(e.target.value)
                 }}
                 value={name}
+                error
+                helperText="Deben ser al menos 3 caracteres"
             />
 
             <TextField
@@ -35,6 +44,8 @@ function FormSignUp() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                value={lastName}
+                onChange={(e)=> setLastName(e.target.value)}
             />
             <TextField
                 id="email"
@@ -42,26 +53,31 @@ function FormSignUp() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                value={email}
+                onChange={(e)=> setEmail(e.target.value)}
             />
 
             <label>Promociones</label>
             <FormGroup>
                 <FormControlLabel control={
-                    <Switch defaultChecked label="Promociones"/>
+                    <Switch label="Promociones" checked={prom} onChange={(e)=> setProm(e.target.checked)} />
 
-                } label="Promociones"/>
-            
-            <label>Novedades</label>
-            <input type="checkbox" />
+                } label="Promociones" />
 
-            <FormControlLabel
-					control={
-						<Switch defaultChecked />
-					}
-					label="Novedades"
-				/>
+                <label>Novedades</label>
+                <input type="checkbox" />
+
+                <FormControlLabel
+                    control={
+                        <Switch checked={nov} onChange={(e) => setNov(e.target.checked)} />
+                    }
+                    label="Novedades"
+                />
             </FormGroup>
-            <Button variant="contained">
+            <Button variant="contained"
+            type="submit"
+			>
+            
                 Registrarse
             </Button>
         </form>
